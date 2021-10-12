@@ -1,9 +1,12 @@
-package com.school.course;
+package com.school.coursesapp.services;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.school.course.Course;
+import com.school.course.LocalCourse;
+import com.school.course.OnlineCourse;
 import com.school.student.Student;
 
 import org.springframework.stereotype.Service;
@@ -27,7 +30,7 @@ public class MyCourseController implements CourseController {
         java.addStudent(minna);
         framework.addStudent(pekka);
         framework.addStudent(minna);
-        cloud.addStudent(pekka);
+        //cloud.addStudent(pekka);
         this.courses.add(html);
         this.courses.add(java);
         this.courses.add(framework);
@@ -41,7 +44,8 @@ public class MyCourseController implements CourseController {
 
     @Override
     public Course getCourseById(long courseId) {
-        return null;
+        return this.courses.stream().filter(course ->
+            course.getId() == courseId).findFirst().orElse(null);
     }
 
     @Override

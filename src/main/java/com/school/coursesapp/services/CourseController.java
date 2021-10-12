@@ -1,7 +1,8 @@
-package com.school.course;
+package com.school.coursesapp.services;
 
 import java.util.List;
 
+import com.school.course.Course;
 import com.school.student.Student;
 
 public interface CourseController {
