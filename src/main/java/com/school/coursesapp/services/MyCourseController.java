@@ -19,26 +19,35 @@ public class MyCourseController implements CourseController {
     private List<Course> courses;
     private List<Student> students;
 
+    private String pathRoot = "./data";
+    private String pathCourses = pathRoot + "/courses.txt";
+    private String pathStudents = pathRoot + "/students.txt";
+
     @Autowired
     CourseFileService courseFileService;
 
     @PostConstruct
     public void postConstructor() {
-        String dataPath = "./data";
         try {
             courses = this.courseFileService.readCoursesFromFile(
-                dataPath + "/courses.txt");
+                this.pathCourses);
             students = this.courseFileService.readStudentsFromFile(
-                dataPath + "/students.txt");
+                this.pathStudents);
         } catch (FileNotFoundException e) {
             System.out.println(e);
         }
     }
 
     @Override
-    public boolean addStudentToCourse(long studentId, long courseId) {
-        Course course = this.getCourseById(courseId);
-        Student student = this.getStudentById(studentId);
+    public boolean addStudentToCourse(long sid, long cid) {
+        Student student = this.getStudentById(sid);
+        Course course = this.getCourseById(cid);
+
+        //if (course != null && student != null) {
+        //    return this.courseFileService.addStudent(student, course);
+        //} else {
+        //    return false;
+        //}
 
         if (course != null && student != null) {
             return course.addStudent(student);

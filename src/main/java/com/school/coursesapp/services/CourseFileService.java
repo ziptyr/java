@@ -56,4 +56,26 @@ public class CourseFileService implements ICourseFileService {
         return courses;
     }
     
+    /*public boolean addStudent(Student student, Course course, String path) {
+        boolean hasSpace;
+        File file = new File(path);
+        file.setWritable(true);
+        FileWriter fileWriter;
+
+
+        hasSpace = course.addStudent(student);
+
+        if (hasSpace) {
+            try {
+                fileWriter = new FileWriter(file, true);
+                fileWriter.write(str);
+                fileWriter.close();
+            } catch (IOException e) {
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }*/
 }
