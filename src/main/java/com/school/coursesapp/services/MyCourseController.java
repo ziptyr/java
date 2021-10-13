@@ -39,7 +39,8 @@ public class MyCourseController implements CourseController {
 
     @Override
     public boolean addStudentToCourse(long studentId, long courseId) {
-        return false;
+        return this.getCourseById(courseId)
+            .addStudent(this.getStudentById(studentId));
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.school.coursesapp;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.school.course.Course;
@@ -12,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -57,5 +60,24 @@ public class CoursesController {
             .collect(Collectors.joining());
 
         return courseInfo;
+    }
+
+    @PostMapping("add")
+    public ResponseEntity<String> addStudentToCourse(
+        @RequestBody Map<String, String> ids
+    ) {
+        long sid, cid;
+        boolean success;
+
+        sid = Long.parseLong(ids.get("sid"));
+        cid = Long.parseLong(ids.get("cid"));
+        success = myCourseController.addStudentToCourse(sid, cid);
+
+        if (success) {
+            return new ResponseEntity<String>("Student added", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<String>(
+                "Adding failed", HttpStatus.FORBIDDEN);
+        }
     }
 }
