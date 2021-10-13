@@ -46,18 +46,33 @@ public class CoursesController {
 
     @GetMapping("students/{id}")
     public String getStudentById(@PathVariable long id) {
-        return "<p>" + myCourseController.getStudentById(id).toString()
+        Student student = myCourseController.getStudentById(id);
+        String response;
+
+        if (student != null) {
+            response = "<p>" + myCourseController.getStudentById(id).toString()
             + "</p>";
+        } else {
+            response = "Student not found";
+        }
+
+        return response;
     }
 
     @GetMapping("courses/{id}")
     public String getCourseById(@PathVariable long id) {
         Course course = myCourseController.getCourseById(id);
-        String courseInfo = "<h3>" + course.getName() + "</h3>";
+        String courseInfo;
 
-        courseInfo += course.getStudents().stream().map(student ->
-            "\n<br />" + student.getFirstName() + student.getLastName())
-            .collect(Collectors.joining());
+        if (course != null) {
+            courseInfo = "<h3>" + course.getName() + "</h3>";
+
+            courseInfo += course.getStudents().stream().map(student ->
+                "\n<br />" + student.getFirstName() + student.getLastName())
+                .collect(Collectors.joining());
+        } else {
+            courseInfo = "Course not found";
+        }
 
         return courseInfo;
     }

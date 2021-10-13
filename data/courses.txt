@@ -1,0 +1,4 @@
+HTML/CSS--Reiska Ope--www.moodle.fi--online
+Basics of fundamentals--Simo Sakka--B654--local
+Java programming--Raisa Ripa--https://oamk.zoom.us/Raisa--online
+Cloud services--John Doe--C54--local

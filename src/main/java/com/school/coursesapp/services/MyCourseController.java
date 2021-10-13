@@ -1,46 +1,50 @@
 package com.school.coursesapp.services;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
+
 import com.school.course.Course;
-import com.school.course.LocalCourse;
 import com.school.course.OnlineCourse;
 import com.school.student.Student;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MyCourseController implements CourseController {
-    private List<Course> courses = new ArrayList<>();
-    private List<Student> students = new ArrayList<>();
+    private List<Course> courses;
+    private List<Student> students;
 
-    public MyCourseController() {
-        Student pekka = new Student("Pekka", "Pekkala");
-        Student minna = new Student("Minna", "Minnala");
-        this.students.add(pekka);
-        this.students.add(minna);
+    @Autowired
+    CourseFileService courseFileService;
 
-        Course html = new LocalCourse("Html Fundamentals", "Aapeli Aatamo", "2BC41");
-        Course java = new OnlineCourse("Java-ohjelmointi", "Aapeli Aatamo", "www.moodle.oulu.fi");
-        Course framework = new LocalCourse("Web Framework", "Kalle Koistinen", "21C4B1A");
-        Course cloud = new OnlineCourse("Cloud Services", "Eero Entinen", "oamk.fi/moodle");
-        html.addStudent(pekka);
-        java.addStudent(minna);
-        framework.addStudent(pekka);
-        framework.addStudent(minna);
-        //cloud.addStudent(pekka);
-        this.courses.add(html);
-        this.courses.add(java);
-        this.courses.add(framework);
-        this.courses.add(cloud);
+    @PostConstruct
+    public void postConstructor() {
+        String dataPath = "./data";
+        try {
+            courses = this.courseFileService.readCoursesFromFile(
+                dataPath + "/courses.txt");
+            students = this.courseFileService.readStudentsFromFile(
+                dataPath + "/students.txt");
+        } catch (FileNotFoundException e) {
+            System.out.println(e);
+        }
     }
 
     @Override
     public boolean addStudentToCourse(long studentId, long courseId) {
-        return this.getCourseById(courseId)
-            .addStudent(this.getStudentById(studentId));
+        Course course = this.getCourseById(courseId);
+        Student student = this.getStudentById(studentId);
+
+        if (course != null && student != null) {
+            return course.addStudent(student);
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -58,14 +62,13 @@ public class MyCourseController implements CourseController {
     public List<Course> getCoursesOfStudent(long studentId) {
         return this.courses.stream().filter(course -> 
             course.getStudents().stream().anyMatch(student -> 
-                student.getId() == studentId))
-            .collect(Collectors.toList());
+                student.getId() == studentId)).collect(Collectors.toList());
     }
 
     @Override
     public Student getStudentById(long studentId) {
         return this.students.stream().filter(student ->
-        student.getId() == studentId).findFirst().orElse(null);
+            student.getId() == studentId).findFirst().orElse(null);
     }
 
     @Override
