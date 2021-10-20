@@ -25,108 +25,109 @@ public class CoursesController {
 
     @GetMapping("courses")
     public ResponseEntity<List<Course>> getAllCourses() {
-        return new ResponseEntity<>(
-            myCourseController.getCourses(), HttpStatus.OK
-        );
+        HttpStatus httpStatus;
+        List<Course> courses = this.myCourseController.getCourses();
+
+        if (courses.size() > 0) {httpStatus = HttpStatus.OK;}
+        else {httpStatus = HttpStatus.NO_CONTENT;}
+
+        return new ResponseEntity<List<Course>>(courses, httpStatus);
     }
 
     @GetMapping("students")
     public ResponseEntity<List<Student>> getAllStudents() {
-        return new ResponseEntity<>(
-            myCourseController.getStudents(), HttpStatus.OK
-        );
+        HttpStatus httpStatus;
+        List<Student> students = this.myCourseController.getStudents();
+
+        if (students.size() > 0) {httpStatus = HttpStatus.OK;}
+        else {httpStatus = HttpStatus.NO_CONTENT;}
+
+        return new ResponseEntity<List<Student>>(students, httpStatus);
     }
 
     @GetMapping("onlinecourses")
-    public String getOnlineCourses() {
-        return myCourseController.getOnlineCourses().stream()
+    public ResponseEntity<String> getOnlineCourses() {
+        HttpStatus httpStatus;
+        List<Course> courses = this.myCourseController.getOnlineCourses();
+        String message = courses.stream()
             .map(course -> "<p>" + course.getName() + "</p>\n")
             .collect(Collectors.joining());
+
+        if (courses.size() == 0) {httpStatus = HttpStatus.BAD_REQUEST;}
+        else if (message.equals("")) {httpStatus = HttpStatus.NO_CONTENT;}
+        else {httpStatus = HttpStatus.OK;}
+
+        return new ResponseEntity<String>(message, httpStatus);
     }
 
     @GetMapping("students/{id}")
-    public String getStudentById(@PathVariable long id) {
-        Student student = myCourseController.getStudentById(id);
-        String response;
+    public ResponseEntity<String> getStudentById(@PathVariable long id) {
+        HttpStatus httpStatus;
+        String message;
+        Student student = this.myCourseController.getStudentById(id);
 
         if (student != null) {
-            response = "<p>" + myCourseController.getStudentById(id).toString()
-            + "</p>";
+            httpStatus = HttpStatus.OK;
+            message = "<p>" + this.myCourseController.getStudentById(id)
+                .toString() + "</p>";
         } else {
-            response = "Student not found";
+            httpStatus = HttpStatus.BAD_REQUEST;
+            message = "Student not found";
         }
 
-        return response;
+        return new ResponseEntity<String>(message, httpStatus);
     }
 
     @GetMapping("courses/{id}")
-    public String getCourseById(@PathVariable long id) {
-        Course course = myCourseController.getCourseById(id);
-        String courseInfo;
+    public ResponseEntity<String> getCourseById(@PathVariable long id) {
+        Course course = this.myCourseController.getCourseById(id);
+        HttpStatus httpStatus;
+        String message;
 
         if (course != null) {
-            courseInfo = "<h3>" + course.getName() + "</h3>";
-
-            courseInfo += course.getStudents().stream().map(student ->
+            httpStatus = HttpStatus.OK;
+            message = "<h3>" + course.getName() + "</h3>";
+            message += course.getStudents().stream().map(student ->
                 "\n<br />" + student.getFirstName() + student.getLastName())
                 .collect(Collectors.joining());
         } else {
-            courseInfo = "Course not found";
+            httpStatus = HttpStatus.NOT_FOUND;
+            message = "Course not found";
         }
 
-        return courseInfo;
+        return new ResponseEntity<String>(message, httpStatus);
     }
 
     @PostMapping("add")
     public ResponseEntity<String> addStudentToCourse(
         @RequestBody Map<String, String> ids
     ) {
-        long sid, cid;
+
         boolean success;
+        HttpStatus httpStatus;
+        long cid, sid;
         String message = "";
 
-        // ArrayList.size() returns int, this will be an issue if the
-        // "school" ever gets more than 2^31 - 1 (~2,15 billion) student
-        // or course records
-        //  1. i believe this to be extremely unlikely for our "school"
-        //  2. ArrayLists themselves can only store int max value of
-        //     records
-        int courses_size = myCourseController.getCourses().size();
-        int students_size = myCourseController.getCourses().size();
-
         try {
-            sid = Long.parseLong(ids.get("sid"));
             cid = Long.parseLong(ids.get("cid"));
-
-            if (sid < 0 || sid > students_size) {
-                success = false;
-                message = "Student id is invalid";
-            } else if (cid < 0 || cid > courses_size) {
-                success = false;
-                message = "Course id is invalid";
-            } else {
-                success = myCourseController.addStudentToCourse(sid, cid);
-                if (!success) {message = "Local course is full";}
-            }
+            sid = Long.parseLong(ids.get("sid"));
+            success = this.myCourseController.addStudentToCourse(sid, cid);
         } catch (NumberFormatException e) {
-            // error should go into log
-            System.out.println(e);
-            success = false;
             message = "Student or course id could not be parsed into 'long'";
-        } catch (Exception e) {
-            // error should go into log
-            System.out.println(e);
             success = false;
+        } catch (Exception e) {
             message = "Adding failed";
+            success = false;
         }
 
         if (success) {
-            return new ResponseEntity<String>("Student added", HttpStatus.OK);
+            httpStatus = HttpStatus.ACCEPTED;
+            message = "Student added";
         } else {
-            if (message.equals("")) {message = "Adding failed";}
-
-            return new ResponseEntity<String>(
-                message, HttpStatus.BAD_REQUEST);
+            httpStatus = HttpStatus.BAD_REQUEST;
+            if (message.equals("")) {message = "Failed. Course might be full";}
         }
+
+        return new ResponseEntity<String>(message, httpStatus);
     }
 }
