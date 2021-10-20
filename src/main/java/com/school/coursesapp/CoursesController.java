@@ -109,10 +109,12 @@ public class CoursesController {
                 if (!success) {message = "Local course is full";}
             }
         } catch (NumberFormatException e) {
+            // error should go into log
             System.out.println(e);
             success = false;
             message = "Student or course id could not be parsed into 'long'";
         } catch (Exception e) {
+            // error should go into log
             System.out.println(e);
             success = false;
             message = "Adding failed";
