@@ -88,8 +88,9 @@ public class CoursesController {
         // ArrayList.size() returns int, this will be an issue if the
         // "school" ever gets more than 2^31 - 1 (~2,15 billion) student
         // or course records
-        //  - i believe this to be extremely unlikely, besides
-        //    ArrayLists themselves can only store int max value records
+        //  1. i believe this to be extremely unlikely for our "school"
+        //  2. ArrayLists themselves can only store int max value of
+        //     records
         int courses_size = myCourseController.getCourses().size();
         int students_size = myCourseController.getCourses().size();
 
