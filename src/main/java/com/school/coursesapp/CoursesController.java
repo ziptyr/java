@@ -83,18 +83,47 @@ public class CoursesController {
     ) {
         long sid, cid;
         boolean success;
+        String message = "";
 
-        sid = Long.parseLong(ids.get("sid"));
-        cid = Long.parseLong(ids.get("cid"));
-        success = myCourseController.addStudentToCourse(sid, cid);
+        // ArrayList.size() returns int, this will be an issue if the
+        // "school" ever gets more than 2^31 - 1 (~2,15 billion) student
+        // or course records
+        //  - i believe this to be extremely unlikely, besides
+        //    ArrayLists themselves can only store int max value records
+        int courses_size = myCourseController.getCourses().size();
+        int students_size = myCourseController.getCourses().size();
+
+        try {
+            sid = Long.parseLong(ids.get("sid"));
+            cid = Long.parseLong(ids.get("cid"));
+
+            if (sid < 0 || sid > students_size) {
+                success = false;
+                message = "Student id is invalid";
+            } else if (cid < 0 || cid > courses_size) {
+                success = false;
+                message = "Course id is invalid";
+            } else {
+                success = myCourseController.addStudentToCourse(sid, cid);
+                if (!success) {message = "Local course is full";}
+            }
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+            success = false;
+            message = "Student or course id could not be parsed into 'long'";
+        } catch (Exception e) {
+            System.out.println(e);
+            success = false;
+            message = "Adding failed";
+        }
 
         if (success) {
-            return new ResponseEntity<String>(
-                "Student added", HttpStatus.CREATED
-            );
+            return new ResponseEntity<String>("Student added", HttpStatus.OK);
         } else {
+            if (message.equals("")) {message = "Adding failed";}
+
             return new ResponseEntity<String>(
-                "Adding failed", HttpStatus.BAD_REQUEST);
+                message, HttpStatus.BAD_REQUEST);
         }
     }
 }
