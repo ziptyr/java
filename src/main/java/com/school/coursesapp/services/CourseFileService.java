@@ -17,11 +17,12 @@ import org.springframework.stereotype.Service;
 public class CourseFileService implements ICourseFileService {
 
     @Override
-    public List<Student> readStudentsFromFile(
-        String filePath
-    ) throws FileNotFoundException {
-        List<Student> students = new ArrayList<>();
+    public List<Student> readStudentsFromFile(String filePath)
+        throws FileNotFoundException
+    {
+
         File file = new File(filePath);
+        List<Student> students = new ArrayList<>();
         Scanner sc = new Scanner(file);
         String[] line;
 
@@ -35,11 +36,12 @@ public class CourseFileService implements ICourseFileService {
     }
 
     @Override
-    public List<Course> readCoursesFromFile(
-        String filePath
-    ) throws FileNotFoundException {
-        List<Course> courses = new ArrayList<>();
+    public List<Course> readCoursesFromFile(String filePath)
+        throws FileNotFoundException
+    {
+
         File file = new File(filePath);
+        List<Course> courses = new ArrayList<>();
         Scanner sc = new Scanner(file);
         String[] line;
 
@@ -55,27 +57,4 @@ public class CourseFileService implements ICourseFileService {
         sc.close();
         return courses;
     }
-    
-    /*public boolean addStudent(Student student, Course course, String path) {
-        boolean hasSpace;
-        File file = new File(path);
-        file.setWritable(true);
-        FileWriter fileWriter;
-
-
-        hasSpace = course.addStudent(student);
-
-        if (hasSpace) {
-            try {
-                fileWriter = new FileWriter(file, true);
-                fileWriter.write(str);
-                fileWriter.close();
-            } catch (IOException e) {
-                return false;
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }*/
 }
