@@ -22,8 +22,8 @@ public class MyCourseController implements CourseController {
     private List<Student> students;
 
     private String pathRoot = "./data";
-    private String pathCourses = pathRoot + "/courses.txt";
-    private String pathStudents = pathRoot + "/students.txt";
+    private String pathCoursesTxt = pathRoot + "/courses.txt";
+    private String pathStudentsTxt = pathRoot + "/students.txt";
 
     @Autowired
     CourseFileService courseFileService;
@@ -32,14 +32,16 @@ public class MyCourseController implements CourseController {
     public void postConstructor() {
         try {
             courses = this.courseFileService.readCoursesFromFile(
-                this.pathCourses);
+                this.pathCoursesTxt);
         } catch (FileNotFoundException e) {
             // error should go into log
             System.out.println(e);
             courses = new ArrayList<Course>();
 
             // try to create new file
-            File file = new File(this.pathCourses);
+            // i would like to make it into private method, but i'm
+            // sticking to the interface design
+            File file = new File(this.pathCoursesTxt);
             try {
                 file.createNewFile();
             } catch (IOException r) {
@@ -51,14 +53,16 @@ public class MyCourseController implements CourseController {
 
         try {
             students = this.courseFileService.readStudentsFromFile(
-                this.pathStudents);
+                this.pathStudentsTxt);
         } catch (FileNotFoundException e) {
             // error should go into log
             System.out.println(e);
             students = new ArrayList<Student>();
 
             // try to create new file
-            File file = new File(this.pathStudents);
+            // i would like to make it into private method, but i'm
+            // sticking to the interface design
+            File file = new File(this.pathStudentsTxt);
             try {
                 file.createNewFile();
             } catch (IOException r) {
