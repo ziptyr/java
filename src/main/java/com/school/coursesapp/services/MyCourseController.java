@@ -34,42 +34,35 @@ public class MyCourseController implements CourseController {
             courses = this.courseFileService.readCoursesFromFile(
                 this.pathCoursesTxt);
         } catch (FileNotFoundException e) {
-            // error should go into log
+            courses = new ArrayList<Course>();
+            createFile(this.pathCoursesTxt);
+        } catch (Exception e) {
             System.out.println(e);
             courses = new ArrayList<Course>();
-
-            // try to create new file
-            // i would like to make it into private method, but i'm
-            // sticking to the interface design
-            File file = new File(this.pathCoursesTxt);
-            try {
-                file.createNewFile();
-            } catch (IOException r) {
-                System.out.println(r);
-            } catch (SecurityException s) {
-                System.out.println(s);
-            }
+            createFile(this.pathCoursesTxt);
         }
 
         try {
             students = this.courseFileService.readStudentsFromFile(
                 this.pathStudentsTxt);
         } catch (FileNotFoundException e) {
-            // error should go into log
+            students = new ArrayList<Student>();
+            createFile(this.pathStudentsTxt);
+        } catch (Exception e) {
             System.out.println(e);
             students = new ArrayList<Student>();
+            createFile(this.pathStudentsTxt);
+        }
+    }
 
-            // try to create new file
-            // i would like to make it into private method, but i'm
-            // sticking to the interface design
-            File file = new File(this.pathStudentsTxt);
-            try {
-                file.createNewFile();
-            } catch (IOException r) {
-                System.out.println(r);
-            } catch (SecurityException s) {
-                System.out.println(s);
-            }
+    private static void createFile(String filePath) {
+        File file = new File(filePath);
+        try {
+            file.createNewFile();
+        } catch (IOException r) {
+            System.out.println(r);
+        } catch (SecurityException s) {
+            System.out.println(s);
         }
     }
 
