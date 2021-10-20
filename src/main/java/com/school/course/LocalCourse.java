@@ -3,8 +3,8 @@ package com.school.course;
 import com.school.student.Student;
 
 public class LocalCourse extends Course {
-    private String classroom;
     private int maxStudents = 25;
+    private String classroom;
 
     public LocalCourse(String name, String teacherName, String classroom) {
         super(name, teacherName);

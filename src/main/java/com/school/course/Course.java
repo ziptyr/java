@@ -8,9 +8,9 @@ import com.school.student.Student;
 public abstract class Course {
     private static long courseCounter = 0;
     private long id;
+    private List<Student> students = new ArrayList<>();
     private String name;
     private String teacherName;
-    private List<Student> students = new ArrayList<>();
 
     public Course(String name, String teacherName) {
         this.id = courseCounter++;
