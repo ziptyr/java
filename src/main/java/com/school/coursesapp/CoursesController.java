@@ -89,10 +89,12 @@ public class CoursesController {
         success = myCourseController.addStudentToCourse(sid, cid);
 
         if (success) {
-            return new ResponseEntity<String>("Student added", HttpStatus.OK);
+            return new ResponseEntity<String>(
+                "Student added", HttpStatus.CREATED
+            );
         } else {
             return new ResponseEntity<String>(
-                "Adding failed", HttpStatus.FORBIDDEN);
+                "Adding failed", HttpStatus.BAD_REQUEST);
         }
     }
 }
