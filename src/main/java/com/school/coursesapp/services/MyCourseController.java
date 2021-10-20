@@ -39,6 +39,42 @@ public class MyCourseController implements CourseController {
     }
 
     @Override
+    public List<Student> getStudents() {
+        return new ArrayList<>(this.students);
+    }
+
+    @Override
+    public List<Course> getCourses() {
+        return new ArrayList<>(this.courses);
+    }
+
+    @Override
+    public Student getStudentById(long studentId) {
+        return this.students.stream().filter(student ->
+            student.getId() == studentId).findFirst().orElse(null);
+    }
+
+    @Override
+    public Course getCourseById(long courseId) {
+        return this.courses.stream().filter(course ->
+            course.getId() == courseId).findFirst().orElse(null);
+    }
+
+    @Override
+    public List<Course> getOnlineCourses() {
+        return this.courses.stream().filter(course ->
+            course.getClass() == OnlineCourse.class)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Course> getCoursesOfStudent(long studentId) {
+        return this.courses.stream().filter(course ->
+            course.getStudents().stream().anyMatch(student ->
+                student.getId() == studentId)).collect(Collectors.toList());
+    }
+
+    @Override
     public boolean addStudentToCourse(long sid, long cid) {
         Student student = this.getStudentById(sid);
         Course course = this.getCourseById(cid);
@@ -54,40 +90,5 @@ public class MyCourseController implements CourseController {
         } else {
             return false;
         }
-    }
-
-    @Override
-    public Course getCourseById(long courseId) {
-        return this.courses.stream().filter(course ->
-            course.getId() == courseId).findFirst().orElse(null);
-    }
-
-    @Override
-    public List<Course> getCourses() {
-        return new ArrayList<>(this.courses);
-    }
-
-    @Override
-    public List<Course> getCoursesOfStudent(long studentId) {
-        return this.courses.stream().filter(course -> 
-            course.getStudents().stream().anyMatch(student -> 
-                student.getId() == studentId)).collect(Collectors.toList());
-    }
-
-    @Override
-    public Student getStudentById(long studentId) {
-        return this.students.stream().filter(student ->
-            student.getId() == studentId).findFirst().orElse(null);
-    }
-
-    @Override
-    public List<Student> getStudents() {
-        return new ArrayList<>(this.students);
-    }
-
-    public List<Course> getOnlineCourses() {
-        return this.courses.stream().filter(course -> 
-            course.getClass() == OnlineCourse.class)
-            .collect(Collectors.toList());
     }
 }

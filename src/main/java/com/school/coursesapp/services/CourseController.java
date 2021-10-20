@@ -12,6 +12,7 @@ public interface CourseController {
     Student getStudentById(long studentId);
     Course getCourseById(long courseId);
 
+    List<Course> getOnlineCourses();
     List<Course> getCoursesOfStudent(long studentId);
     boolean addStudentToCourse(long studentId, long courseId);
 }
