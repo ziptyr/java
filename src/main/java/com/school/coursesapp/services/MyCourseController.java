@@ -1,6 +1,8 @@
 package com.school.coursesapp.services;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,10 +33,39 @@ public class MyCourseController implements CourseController {
         try {
             courses = this.courseFileService.readCoursesFromFile(
                 this.pathCourses);
+        } catch (FileNotFoundException e) {
+            // error should go into log
+            System.out.println(e);
+            courses = new ArrayList<Course>();
+
+            // try to create new file
+            File file = new File(this.pathCourses);
+            try {
+                file.createNewFile();
+            } catch (IOException r) {
+                System.out.println(r);
+            } catch (SecurityException s) {
+                System.out.println(s);
+            }
+        }
+
+        try {
             students = this.courseFileService.readStudentsFromFile(
                 this.pathStudents);
         } catch (FileNotFoundException e) {
+            // error should go into log
             System.out.println(e);
+            students = new ArrayList<Student>();
+
+            // try to create new file
+            File file = new File(this.pathStudents);
+            try {
+                file.createNewFile();
+            } catch (IOException r) {
+                System.out.println(r);
+            } catch (SecurityException s) {
+                System.out.println(s);
+            }
         }
     }
 
@@ -78,12 +109,6 @@ public class MyCourseController implements CourseController {
     public boolean addStudentToCourse(long sid, long cid) {
         Student student = this.getStudentById(sid);
         Course course = this.getCourseById(cid);
-
-        //if (course != null && student != null) {
-        //    return this.courseFileService.addStudent(student, course);
-        //} else {
-        //    return false;
-        //}
 
         if (course != null && student != null) {
             return course.addStudent(student);
