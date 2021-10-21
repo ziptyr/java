@@ -21,15 +21,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class CoursesController {
 
     @Autowired
-    CourseService myCourseController;
+    CourseService courseService;
 
     @GetMapping("courses")
     public ResponseEntity<List<Course>> getAllCourses() {
         HttpStatus httpStatus;
-        List<Course> courses = this.myCourseController.getCourses();
+        List<Course> courses = this.courseService.getCourses();
 
-        if (courses.size() > 0) {httpStatus = HttpStatus.OK;}
-        else {httpStatus = HttpStatus.NO_CONTENT;}
+        if (courses.isEmpty()) {httpStatus = HttpStatus.NO_CONTENT;}
+        else {httpStatus = HttpStatus.OK;}
 
         return new ResponseEntity<List<Course>>(courses, httpStatus);
     }
@@ -37,10 +37,10 @@ public class CoursesController {
     @GetMapping("students")
     public ResponseEntity<List<Student>> getAllStudents() {
         HttpStatus httpStatus;
-        List<Student> students = this.myCourseController.getStudents();
+        List<Student> students = this.courseService.getStudents();
 
-        if (students.size() > 0) {httpStatus = HttpStatus.OK;}
-        else {httpStatus = HttpStatus.NO_CONTENT;}
+        if (students.isEmpty()) {httpStatus = HttpStatus.NO_CONTENT;}
+        else {httpStatus = HttpStatus.OK;}
 
         return new ResponseEntity<List<Student>>(students, httpStatus);
     }
@@ -48,13 +48,13 @@ public class CoursesController {
     @GetMapping("onlinecourses")
     public ResponseEntity<String> getOnlineCourses() {
         HttpStatus httpStatus;
-        List<Course> courses = this.myCourseController.getOnlineCourses();
+        List<Course> courses = this.courseService.getOnlineCourses();
         String message = courses.stream()
             .map(course -> "<p>" + course.getName() + "</p>\n")
             .collect(Collectors.joining());
 
-        if (courses.size() == 0) {httpStatus = HttpStatus.BAD_REQUEST;}
-        else if (message.equals("")) {httpStatus = HttpStatus.NO_CONTENT;}
+        if (courses.isEmpty()) {httpStatus = HttpStatus.NO_CONTENT;}
+        else if (message.equals("")) {httpStatus = HttpStatus.BAD_REQUEST;}
         else {httpStatus = HttpStatus.OK;}
 
         return new ResponseEntity<String>(message, httpStatus);
@@ -64,11 +64,11 @@ public class CoursesController {
     public ResponseEntity<String> getStudentById(@PathVariable long id) {
         HttpStatus httpStatus;
         String message;
-        Student student = this.myCourseController.getStudentById(id);
+        Student student = this.courseService.getStudentById(id);
 
         if (student != null) {
             httpStatus = HttpStatus.OK;
-            message = "<p>" + this.myCourseController.getStudentById(id)
+            message = "<p>" + this.courseService.getStudentById(id)
                 .toString() + "</p>";
         } else {
             httpStatus = HttpStatus.BAD_REQUEST;
@@ -80,7 +80,7 @@ public class CoursesController {
 
     @GetMapping("courses/{id}")
     public ResponseEntity<String> getCourseById(@PathVariable long id) {
-        Course course = this.myCourseController.getCourseById(id);
+        Course course = this.courseService.getCourseById(id);
         HttpStatus httpStatus;
         String message;
 
@@ -111,7 +111,7 @@ public class CoursesController {
         try {
             cid = Long.parseLong(ids.get("cid"));
             sid = Long.parseLong(ids.get("sid"));
-            success = this.myCourseController.addStudentToCourse(sid, cid);
+            success = this.courseService.addStudentToCourse(sid, cid);
         } catch (NumberFormatException e) {
             message = "Student or course id could not be parsed into 'long'";
             success = false;
@@ -125,7 +125,7 @@ public class CoursesController {
             message = "Student added";
         } else {
             httpStatus = HttpStatus.BAD_REQUEST;
-            if (message.equals("")) {message = "Failed. Course might be full";}
+            if (message.isEmpty()) {message = "Failed. Course might be full";}
         }
 
         return new ResponseEntity<String>(message, httpStatus);
