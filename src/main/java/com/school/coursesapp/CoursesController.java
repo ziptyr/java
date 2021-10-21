@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.school.course.Course;
-import com.school.coursesapp.services.MyCourseController;
+import com.school.coursesapp.services.CourseService;
 import com.school.student.Student;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CoursesController {
 
     @Autowired
-    MyCourseController myCourseController;
+    CourseService myCourseController;
 
     @GetMapping("courses")
     public ResponseEntity<List<Course>> getAllCourses() {

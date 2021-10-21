@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MyCourseController implements CourseController {
+public class CourseService implements ICourseService {
     private List<Course> courses;
     private List<Student> students;
 

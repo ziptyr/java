@@ -5,7 +5,7 @@ import java.util.List;
 import com.school.course.Course;
 import com.school.student.Student;
 
-public interface CourseController {
+public interface ICourseService {
     List<Student> getStudents();
     List<Course> getCourses();
 
