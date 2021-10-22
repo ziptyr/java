@@ -97,9 +97,14 @@ public class CourseService implements ICourseService {
 
     @Override
     public List<Course> getCoursesOfStudent(long studentId) {
-        return this.courses.stream().filter(course ->
-            course.getStudents().stream().anyMatch(student ->
-                student.getId() == studentId)).collect(Collectors.toList());
+        return this.courses.stream()
+            .filter(course -> course.getStudents()
+                .contains(this.getStudentById(studentId)))
+            .collect(Collectors.toList());
+
+                /*.stream()
+                .anyMatch(student -> student.getId() == studentId))
+            .collect(Collectors.toList());*/
     }
 
     @Override
