@@ -45,7 +45,7 @@ public class CoursesController {
         String responseMessage = "";
 
         if (student != null) {
-            responseMessage = "<h3>" + student + "</h3>"
+            responseMessage = "<h3>" + student.toString() + "</h3>"
                 + this.courseService.getCoursesOfStudent(id)
                     .stream()
                     .map(course -> "\n" + course.getName() + "<br />")
