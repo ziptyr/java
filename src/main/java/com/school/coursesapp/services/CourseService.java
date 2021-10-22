@@ -101,10 +101,6 @@ public class CourseService implements ICourseService {
             .filter(course -> course.getStudents()
                 .contains(this.getStudentById(studentId)))
             .collect(Collectors.toList());
-
-                /*.stream()
-                .anyMatch(student -> student.getId() == studentId))
-            .collect(Collectors.toList());*/
     }
 
     @Override

@@ -9,6 +9,8 @@ import com.school.coursesapp.services.CourseService;
 import com.school.student.Student;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,7 +74,7 @@ public class CoursesController {
     }
 
     @PostMapping("add")
-    public String addStudentToCourse(
+    public ResponseEntity<String> addStudentToCourse(
         @RequestBody Map<String, String> ids
     ) {
 
@@ -82,9 +84,10 @@ public class CoursesController {
         sid = Long.parseLong(ids.get("sid"));
 
         if (this.courseService.addStudentToCourse(sid, cid)) {
-            return "Student added.";
+            return new ResponseEntity<String>("Student added.", HttpStatus.OK);
         } else {
-            return "Failed. Course might be full.";
+            return new ResponseEntity<String>(
+                "Failed. Course might be full.", HttpStatus.NOT_ACCEPTABLE);
         }
     }
 }
