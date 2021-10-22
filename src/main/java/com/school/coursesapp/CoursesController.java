@@ -78,13 +78,15 @@ public class CoursesController {
         @RequestBody Map<String, String> ids
     ) {
 
-        long cid, sid;
+        long cid = Long.parseLong(ids.get("cid"));
+        Course course = this.courseService.getCourseById(cid);
 
-        cid = Long.parseLong(ids.get("cid"));
-        sid = Long.parseLong(ids.get("sid"));
+        long sid = Long.parseLong(ids.get("sid"));
+        Student student = this.courseService.getStudentById(sid);
 
         if (this.courseService.addStudentToCourse(sid, cid)) {
-            return new ResponseEntity<String>("Student added.", HttpStatus.OK);
+            return new ResponseEntity<String>(
+                student.toString() + " --> " + course.getName(), HttpStatus.OK);
         } else {
             return new ResponseEntity<String>(
                 "Failed. Course might be full.", HttpStatus.NOT_ACCEPTABLE);
