@@ -30,6 +30,11 @@ public class CourseService implements ICourseService {
 
     @PostConstruct
     public void postConstructor() {
+        /**
+         * Test if files exist get courses and students from them.
+         *
+         * If file is missing create a new and return empty ArrayList.
+         */
         try {
             courses = this.courseFileService.readCoursesFromFile(
                 this.pathCoursesTxt);
@@ -56,6 +61,9 @@ public class CourseService implements ICourseService {
     }
 
     private static void createFile(String filePath) {
+        /**
+         * Create new file into given path.
+         */
         File file = new File(filePath);
         try {
             file.createNewFile();
@@ -68,35 +76,57 @@ public class CourseService implements ICourseService {
 
     @Override
     public List<Student> getStudents() {
+        /**
+         * Return new ArrayList of students.
+         */
         return new ArrayList<>(this.students);
     }
 
     @Override
     public List<Course> getCourses() {
+        /**
+         * Return new ArrayList of courses.
+         */
         return new ArrayList<>(this.courses);
     }
 
     @Override
     public Student getStudentById(long studentId) {
-        return this.students.stream().filter(student ->
-            student.getId() == studentId).findFirst().orElse(null);
+        /**
+         * Return student with matching id.
+         */
+        return this.students.stream()
+            .filter(student -> student.getId() == studentId)
+            .findFirst()
+            .orElse(null);
     }
 
     @Override
     public Course getCourseById(long courseId) {
-        return this.courses.stream().filter(course ->
-            course.getId() == courseId).findFirst().orElse(null);
+        /**
+         * Return course with matching id.
+         */
+        return this.courses.stream()
+            .filter(course -> course.getId() == courseId)
+            .findFirst()
+            .orElse(null);
     }
 
     @Override
     public List<Course> getOnlineCourses() {
-        return this.courses.stream().filter(course ->
-            course.getClass() == OnlineCourse.class)
+        /**
+         * Return all courses of type "OnlineCourse".
+         */
+        return this.courses.stream()
+            .filter(course -> course.getClass() == OnlineCourse.class)
             .collect(Collectors.toList());
     }
 
     @Override
     public List<Course> getCoursesOfStudent(long studentId) {
+        /**
+         * Return all courses of student that given matches id.
+         */
         return this.courses.stream()
             .filter(course -> course.getStudents()
                 .contains(this.getStudentById(studentId)))
@@ -105,6 +135,9 @@ public class CourseService implements ICourseService {
 
     @Override
     public boolean addStudentToCourse(long sid, long cid) {
+        /**
+         * Add student matching given id to course matching given id.
+         */
         Student student = this.getStudentById(sid);
         Course course = this.getCourseById(cid);
 

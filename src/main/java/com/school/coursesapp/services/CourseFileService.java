@@ -20,7 +20,11 @@ public class CourseFileService implements ICourseFileService {
     public List<Student> readStudentsFromFile(String filePath)
         throws FileNotFoundException
     {
-
+        /**
+         * Read file from given path into List<Students>.
+         *
+         * Data delimiter: " ".
+         */
         File file = new File(filePath);
         List<Student> students = new ArrayList<>();
         Scanner sc = new Scanner(file);
@@ -39,7 +43,15 @@ public class CourseFileService implements ICourseFileService {
     public List<Course> readCoursesFromFile(String filePath)
         throws FileNotFoundException
     {
-
+        /**
+         * Read file from given path into List<Courses>.
+         *
+         * Data delimiter: "--".
+         *
+         * If data has atleast 3 elements and the last value is "online"
+         * the data is made into OnlineCourse. Otherwise into
+         * LocalCourse.
+         */
         File file = new File(filePath);
         List<Course> courses = new ArrayList<>();
         Scanner sc = new Scanner(file);
@@ -47,7 +59,7 @@ public class CourseFileService implements ICourseFileService {
 
         while (sc.hasNextLine()) {
             line = sc.nextLine().split("--");
-            if (line[3].equals("online")) {
+            if (line.length >= 3 && line[line.length - 1].equals("online")) {
                 courses.add(new OnlineCourse(line[0], line[1], line[2]));
             } else {
                 courses.add(new LocalCourse(line[0], line[1], line[2]));
