@@ -80,7 +80,7 @@ public class CoursesController {
         /**
          * Neither course nor student can be null if success is true.
          *
-         * Try-catch should be in
+         * Better place for try-catch would be
          * CourseService.addStudentToCourse(String, String).
          */
         Boolean success;
