@@ -21,7 +21,7 @@ public class CourseService implements ICourseService {
     private List<Course> courses;
     private List<Student> students;
 
-    private String pathRoot = "./data";
+    private String pathRoot = "./";
     private String pathCoursesTxt = pathRoot + "/courses.txt";
     private String pathStudentsTxt = pathRoot + "/students.txt";
 
@@ -40,11 +40,11 @@ public class CourseService implements ICourseService {
                 this.pathCoursesTxt);
         } catch (FileNotFoundException e) {
             courses = new ArrayList<Course>();
-            createFile(this.pathCoursesTxt);
+            CourseService.createFile(this.pathCoursesTxt);
         } catch (Exception e) {
             System.out.println(e);
             courses = new ArrayList<Course>();
-            createFile(this.pathCoursesTxt);
+            CourseService.createFile(this.pathCoursesTxt);
         }
 
         try {
