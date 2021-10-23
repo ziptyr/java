@@ -77,14 +77,29 @@ public class CoursesController {
     public ResponseEntity<String> addStudentToCourse(
         @RequestBody Map<String, String> ids
     ) {
+        /**
+         * Neither course nor student can be null if success is true.
+         *
+         * Try-catch should be in
+         * CourseService.addStudentToCourse(String, String).
+         */
+        Boolean success;
+        Course course = null;
+        long cid, sid;
+        Student student = null;
 
-        long cid = Long.parseLong(ids.get("cid"));
-        Course course = this.courseService.getCourseById(cid);
+        try {
+            cid = Long.parseLong(ids.get("cid"));
+            sid = Long.parseLong(ids.get("sid"));
 
-        long sid = Long.parseLong(ids.get("sid"));
-        Student student = this.courseService.getStudentById(sid);
+            course = this.courseService.getCourseById(cid);
+            student = this.courseService.getStudentById(sid);
+            success = this.courseService.addStudentToCourse(sid, cid);
+        } catch (NumberFormatException e) {
+            success = false;
+        }
 
-        if (this.courseService.addStudentToCourse(sid, cid)) {
+        if (success) {
             return new ResponseEntity<String>(
                 student.toString() + " --> " + course.getName(), HttpStatus.OK);
         } else {
